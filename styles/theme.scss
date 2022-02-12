@@ -1,0 +1,12 @@
+@import "default.scss";
+
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+:root{
+  --border-color:rgba(165, 165, 165, 0.438);
+  --lato:'Lato', sans-serif;
+}
+
+body{
+  font-family:var(--lato);
+}

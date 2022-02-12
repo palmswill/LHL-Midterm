@@ -1,18 +1,29 @@
 // See: https://sass-lang.com/
 
 body {
-  background-color: #EEE;
+  // background-color: #EEE;
+  background-image: url(https://www.pizzahut.ca/order/images/backgrounds/bg-app.67f30e52dd2a50e2e99d26b7e43befd6.jpg);
+  background-repeat: repeat;
+  --nav-height:8vh;
 
-  h1 {
-    color: salmon;
-  }
+}
 
+main {
+  display:grid;
+  width:100%;
+  height:100vh;
+  grid-template-columns: auto 300px;
+}
 
-  .cat-img {
-    width: 400px;
-  }
+main>*{
+  border-inline:1px solid var(--border-color);
 
-  div {
-    background-color: blue;
-  }
+}
+
+.right{
+  background-color:white;
+  position:fixed;
+  right:0;
+  width:300px;
+  min-height:100vh;
 }
