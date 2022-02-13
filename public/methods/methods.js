@@ -66,7 +66,7 @@ const cartList = [
   {
     id: "1",
     name: "Dragon Roll",
-    pricePerRoll: 5.99,
+    price: 5.99,
     content: "dragon dragon dragon",
     imageUrl: "",
     quantity: 5,
@@ -74,7 +74,7 @@ const cartList = [
   {
     id: "2",
     name: "Unagi Roll",
-    pricePerRoll: 15.99,
+    price: 15.99,
     content: "dragon dragon dragon",
     imageUrl: "",
     quantity: 1,
@@ -82,7 +82,7 @@ const cartList = [
   {
     id: "3",
     name: "California Roll with cheese",
-    pricePerRoll: 29.99,
+    price: 29.99,
     content: "dragon dragon dragon",
     imageUrl: "",
     quantity: 1,
@@ -90,7 +90,7 @@ const cartList = [
 ];
 
 const generateCartItem = (cartItem) => {
-  const { id, name, pricePerRoll, quantity } = cartItem;
+  const { id, name, price, quantity } = cartItem;
 
   const $cartItem = `
   <div class="cart-item">
@@ -98,7 +98,7 @@ const generateCartItem = (cartItem) => {
       <div>${name}</div>
       <div> x ${quantity}</div>
     </div>
-    <div class="price-tag">$${pricePerRoll}</div>
+    <div class="price-tag">$${price}</div>
     <div class="cancel-section">
       <i class="${id} cancel-item fa-solid fa-xmark"></i>
     </div>
@@ -114,4 +114,34 @@ const renderCartItems = (cartList) => {
   }
 
   return cartText;
+};
+
+const renderCartTotal = (cartList) => {
+  let subTotal = 0;
+
+  cartList.forEach((item) => {
+    const { price, quantity } = item;
+    subTotal += price * quantity;
+  });
+
+  let tax = Math.round(0.13 * subTotal * 100) / 100;
+
+  let totalPrice = Math.round(subTotal + tax * 100) / 100;
+
+  const $PriceText = `
+  <div class="flex bold">
+    <span>Subtotal</span>
+    <span>$${subTotal}</span>
+  </div>
+  <div class="flex fs-300">
+     <span><i class="fa-solid fa-angle-right"></i> 
+     Total Tax</span>
+    <span>$${tax}</span>
+  </div>
+  <div class="flex bold">
+    <span>Amount due</span>
+    <span>$${totalPrice}</span>
+  </div>`;
+
+  return $PriceText;
 };

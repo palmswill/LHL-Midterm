@@ -1,7 +1,3 @@
-
-
-
-
 $(() => {
   // test data
 
@@ -13,9 +9,12 @@ $(() => {
   console.log(" shop rendered");
 
   // get request - get cart items
-  const cartItem =renderCartItems(cartList);
+  const cartItem = renderCartItems(cartList);
 
   $(".basket").append(cartItem);
 
-  console.log("cart render");
+  $(".price-display").empty();
+  $(".price-display").append(renderCartTotal(cartList));
+
+  console.log("cart rendered");
 });
