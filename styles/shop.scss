@@ -1,16 +1,15 @@
 section.shop {
   max-width: 900px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1%;
   padding: 1%;
   margin-inline: auto;
   margin-block: 5px;
 
   > .shop-item {
-    align-self: strech;
     flex-direction: column;
     background-color: white;
-    height: 350px;
+    min-height: 350px;
     flex-grow: 1;
     overflow-y: auto;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
