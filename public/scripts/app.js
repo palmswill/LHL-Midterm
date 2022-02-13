@@ -9,5 +9,11 @@ $(() => {
 
   $(".shop").append(shopItems);
 
-  console.log("rendered");
+  console.log(" shop rendered");
+
+  const cartItem =renderCartItems(cartList);
+
+  $(".basket").append(cartItem);
+
+  console.log("cart render");
 });
