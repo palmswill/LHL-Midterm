@@ -4,46 +4,45 @@ section.cart {
     width: 100%;
     border-bottom: 1px solid var(--border-color);
   }
-  .basket {
-    padding-block: 50px;
-    flex-direction: column;
+
+  .top {
     height: 50vh;
     overflow-y: auto;
 
-    & > * {
-      width: 80%;
-      display: flex;
-      margin-inline: auto;
-      min-height: 50px;
-    }
     & > h1 {
+      padding-top: 50px;
       font-weight: 800;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
     }
 
-    .cart-item {
-      gap: 3px;
-      margin-block: 5%;
-      > * {
-        padding-inline: 2px;
+    .basket {
+      padding-top: 10px;
+      flex-direction: column;
+
+      & > * {
+        width: 80%;
+        display: grid;
+        margin-inline: auto;
+        min-height: 50px;
+        grid-template-columns:4fr 2fr 1fr;
       }
 
-      .description {
-        flex-grow: 5;
-      }
-      .price-tag {
-        flex-grow: 2;
-      }
-      .cancel-section {
-        flex-grow: 1;
+      .cart-item {
+        gap: 3px;
+        margin-block: 5%;
+        > * {
+          padding-inline: 2px;
+        }
+        .cancel-section {
+     
 
-        i {
-          color: lightgray;
+          i {
+            color: lightgray;
 
-          &:hover {
-            cursor: pointer;
-            color:black;
+            &:hover {
+              cursor: pointer;
+              color: black;
+            }
           }
         }
       }

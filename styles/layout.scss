@@ -15,6 +15,9 @@ main {
   grid-template-columns: auto 300px;
 }
 
+
+
+
 main>*{
   border-inline:1px solid var(--border-color);
   height:100%;
@@ -32,4 +35,13 @@ main>*{
 .left{
   overflow-y:auto;
 
+}
+
+@media (max-width:450px){
+  main{
+    display: block;
+  }
+  .right{
+    display:none;
+  }
 }
