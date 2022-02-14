@@ -1,5 +1,8 @@
+import {renderShopItems,shopList,fetchCartItem,submitForm} from "../methods/methods.js";
+
 $(() => {
-  // test data
+  //create order id
+  // createOrder();
 
   // get request -get shop items
 
@@ -27,9 +30,13 @@ $(() => {
   $(".check-out").click(function () {
     $(".pop-up").addClass("active");
   });
-  $(".cancel-modal,.submit-order").click(function (event) {
-    event.preventDefault();
-
+  $(".cancel-modal,.submit-order").click(function () {
     $(".pop-up").removeClass("active");
+  });
+
+  $(".submit-order").click(function (event) {
+    event.preventDefault();
+    
+    submitForm();
   });
 });

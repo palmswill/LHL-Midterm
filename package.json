@@ -17,6 +17,7 @@
     "dotenv": "^2.0.0",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
+    "js-cookie": "^3.0.1",
     "morgan": "^1.9.1",
     "node-sass-middleware": "^0.11.0",
     "pg": "^8.5.0",
@@ -25,8 +26,7 @@
   "devDependencies": {
     "nodemon": "^1.19.1"
   },
-  "engines":{
-    "node":"12.18.4"
-
+  "engines": {
+    "node": "12.18.4"
   }
 }

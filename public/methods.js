@@ -1,6 +1,6 @@
 // create_order
 
-export const createOrder = () => {
+const createOrder = () => {
   console.log(Cookies.get("order_id"));
 };
 
@@ -37,7 +37,7 @@ export const shopList = [
   },
 ];
 
- const generateShopItemLayout = (shopItem) => {
+const generateShopItemLayout = (shopItem) => {
   const { name, pricePerRoll, imageUrl, content } = shopItem;
 
   let $shopItem = `<div class="shop-item flex">
@@ -69,7 +69,7 @@ export const renderShopItems = (shopList) => {
 };
 
 // cartItem
-export const cartList = [
+const cartList = [
   {
     id: "1",
     name: "Dragon Roll",
@@ -96,7 +96,7 @@ export const cartList = [
   },
 ];
 
- const generateCartItem = (cartItem) => {
+const generateCartItem = (cartItem) => {
   const { id, name, price, quantity } = cartItem;
 
   const $cartItem = `
@@ -114,7 +114,7 @@ export const cartList = [
   return $cartItem;
 };
 
-export const renderCartItems = (cartList) => {
+const renderCartItems = (cartList) => {
   let cartText = "";
   for (const item of cartList) {
     cartText += generateCartItem(item);
@@ -123,7 +123,7 @@ export const renderCartItems = (cartList) => {
   return cartText;
 };
 
-export const renderCartTotal = (cartList) => {
+const renderCartTotal = (cartList) => {
   let subTotal = 0;
 
   cartList.forEach((item) => {
@@ -179,3 +179,4 @@ export const submitForm = () => {
 };
 
 
+export default createOrder;
