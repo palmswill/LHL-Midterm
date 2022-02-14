@@ -1,21 +1,44 @@
-
-
-
-
 $(() => {
   // test data
 
   // get request -get shop items
-  const shopItems = renderShopItems(shopList);
 
-  $(".shop").append(shopItems);
+  $.get("/")
+    .then(() => {
+      $(".shop").empty();
+      const shopItems = renderShopItems(shopList);
 
-  console.log(" shop rendered");
+      $(".shop").append(shopItems);
+
+      console.log("shop rendered");
+    })
+    .catch((err) => console.log(err));
 
   // get request - get cart items
-  const cartItem =renderCartItems(cartList);
 
-  $(".basket").append(cartItem);
+  $.get("/").then(() => {
+    const cartItem = renderCartItems(cartList);
 
-  console.log("cart render");
+    $(".basket").empty();
+    $(".basket").append(cartItem);
+
+    $(".price-display").empty();
+    $(".price-display").append(renderCartTotal(cartList));
+
+    console.log("cart rendered");
+  });
+
+  // for submit order form modal 
+
+  $(".check-out").click(function(){
+    $(".pop-up").addClass("active");
+  }
+  )
+  $(".cancel-modal,.submit-order").click(function(event){
+    event.preventDefault();
+
+    $(".pop-up").removeClass("active");
+
+  })
+
 });
