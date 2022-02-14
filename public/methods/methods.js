@@ -19,6 +19,7 @@ export const removeOrder = () => {
 
 export const shopList = [
   {
+    id: 1,
     name: "Dragon Roll",
     pricePerRoll: "15.99",
     imageUrl:
@@ -26,6 +27,7 @@ export const shopList = [
     content: "sushi on black ceramic plate",
   },
   {
+    id: 2,
     name: "Unagi Roll",
     pricePerRoll: "5.99",
     imageUrl:
@@ -33,6 +35,7 @@ export const shopList = [
     content: "sushi on black ceramic plate",
   },
   {
+    id: 3,
     name: "Tenpura Roll",
     pricePerRoll: "15.99",
     imageUrl:
@@ -40,6 +43,7 @@ export const shopList = [
     content: "sushi on black ceramic plate",
   },
   {
+    id: 4,
     name: "Don Don Don Roll",
     pricePerRoll: "15.99",
     imageUrl:
@@ -49,7 +53,7 @@ export const shopList = [
 ];
 
 const generateShopItemLayout = (shopItem) => {
-  const { name, pricePerRoll, imageUrl, content } = shopItem;
+  const { id, name, pricePerRoll, imageUrl, content } = shopItem;
 
   let $shopItem = `<div class="shop-item flex">
   <img
@@ -60,9 +64,9 @@ const generateShopItemLayout = (shopItem) => {
     <h3>${name}</h3>
     <p>${content}</p>
   </div>
-  <button class="add-shop-item">
-    <span>Add</span>
-    <span class="price">$${pricePerRoll}</span>
+  <button id=${id} class="add-shop-item">
+    <span id=${id}>Add</span>
+    <span id=${id} class="price">$${pricePerRoll}</span>
   </button>
 </div>
   `;
@@ -128,11 +132,14 @@ const generateCartItem = (cartItem) => {
   <div class="cart-item">
     <div class="description">
       <div>${name}</div>
-      <div> x ${quantity}</div>
+      <div> x ${quantity}
+      <i id=${id} class="fa-solid fa-plus increment"></i>
+      <i id=${id} class="fa-solid fa-minus decrement"></i>
+      </div>
     </div>
     <div class="price-tag">$${price}</div>
     <div class="cancel-section">
-      <i class="${id} cancel-item fa-solid fa-xmark"></i>
+      <i id=${id} class="cancel-item fa-solid fa-xmark"></i>
     </div>
   </div>`;
 
@@ -183,7 +190,6 @@ export const fetchCartItem = () => {
 
   $(".basket").empty();
   $(".basket").append(cartItem);
-
   $(".price-display").empty();
   $(".price-display").append(renderCartTotal(cartList));
 };
@@ -203,12 +209,16 @@ export const getandRenderCartItemswithPrice = () => {
 export const submitForm = () => {
   const obj = {};
 
-  let formArray = $(".submit-form").serializeArray();
-
+  const formArray = $(".submit-form").serializeArray();
+  const order_id = Cookies.get("order_id");
+  obj.order_id = order_id;
   for (let input of formArray) {
     const { name, value } = input;
 
     obj[name] = value;
   }
-  console.log(obj);
+  // form-submission after adding order_id;
+  $.get("/")
+    .then(console.log(obj))
+    .catch((err) => console.log(err));
 };

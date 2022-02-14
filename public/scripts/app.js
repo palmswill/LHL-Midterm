@@ -1,30 +1,24 @@
-import {getandRenderShopItems,getandRenderCartItemswithPrice,submitForm,initializeOrder} from "../methods/methods.js";
+import {
+  getandRenderShopItems,
+  // getandRenderCartItemswithPrice,
+  initializeOrder,
+} from "../methods/methods.js";
+
+import { initalizeForm } from "../methods/submitForm.js";
+import { initalizeCart } from "../methods/cart.js";
+import { initalizeShop } from "../methods/shop.js";
 
 $(() => {
   //initialize order Id if not in cookie
 
-   initializeOrder();
+  initializeOrder();
 
   // get shop items
+  initalizeShop();
 
-  getandRenderShopItems();
+  // get cart items with total price of order;
 
-  // get request - get cart items with total price of order;
-
-  getandRenderCartItemswithPrice();
-
-  // for submit order form modal
-
-  $(".check-out").click(function () {
-    $(".pop-up").addClass("active");
-  });
-  $(".cancel-modal,.submit-order").click(function () {
-    $(".pop-up").removeClass("active");
-  });
-
-  $(".submit-order").click(function (event) {
-    event.preventDefault();
-    
-    submitForm();
-  });
+  initalizeCart();
+  //  submit order form modal ------
+  initalizeForm();
 });

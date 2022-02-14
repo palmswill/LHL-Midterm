@@ -35,6 +35,24 @@
         > * {
           padding-inline: 2px;
         }
+
+        .increment,.decrement{
+          padding:3px;
+          margin-left:5px;
+          border-radius:2px;
+          color:white;
+          &:hover{
+            cursor: pointer;
+          }
+        }
+
+        .increment{
+          background-color:var(--secondary-color);
+        }
+        .decrement{
+          background-color:lightgray;
+        }
+
         .cancel-section {
           text-align: right;
           i {
