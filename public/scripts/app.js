@@ -28,8 +28,17 @@ $(() => {
     console.log("cart rendered");
   });
 
+  // for submit order form modal 
+
   $(".check-out").click(function(){
-    console.log(this.classList)}
+    $(".pop-up").addClass("active");
+  }
   )
+  $(".cancel-modal,.submit-order").click(function(event){
+    event.preventDefault();
+
+    $(".pop-up").removeClass("active");
+
+  })
 
 });

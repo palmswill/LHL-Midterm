@@ -53,3 +53,10 @@ button {
     text-align: center;
   }
 }
+
+
+input,textarea{
+  outline:none;
+  border:none;
+  box-shadow:none;
+}
