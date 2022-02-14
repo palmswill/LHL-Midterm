@@ -1,17 +1,21 @@
-// create_order
+// order
 
-export const createOrder = () => {
+export const initializeOrder = () => {
   let order_id = Cookies.get("order_id");
 
   // if no order id in cookes, set the order_id
   if (!order_id) {
     $.get("").then(() => Cookies.set("order_id", 1));
   }
-
-  console.log(Cookies.get("order_id"));
+  console.log("order_id:", Cookies.get("order_id"));
 };
 
-// shop
+//remove order_id
+export const removeOrder = () => {
+  Cookies.remove("order_id");
+};
+
+// shop------------------------------
 
 export const shopList = [
   {
@@ -75,7 +79,21 @@ export const renderShopItems = (shopList) => {
   return shopText;
 };
 
-// cartItem
+// get and render shop items
+export const getandRenderShopItems = () => {
+  $.get("/")
+    .then(() => {
+      $(".shop").empty();
+      const shopItems = renderShopItems(shopList);
+
+      $(".shop").append(shopItems);
+
+      console.log("shop rendered");
+    })
+    .catch((err) => console.log(err));
+};
+
+// cartItem-------------------------
 const cartList = [
   {
     id: "1",
@@ -170,6 +188,16 @@ export const fetchCartItem = () => {
   $(".price-display").append(renderCartTotal(cartList));
 };
 
+export const getandRenderCartItemswithPrice = () => {
+  $.get("/")
+    .then(() => {
+      fetchCartItem();
+
+      console.log("cart rendered");
+    })
+    .catch((err) => console.log(err));
+};
+
 // form submission
 
 export const submitForm = () => {
@@ -184,5 +212,3 @@ export const submitForm = () => {
   }
   console.log(obj);
 };
-
-export default createOrder;

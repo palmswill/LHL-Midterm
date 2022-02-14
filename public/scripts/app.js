@@ -1,29 +1,17 @@
-import {renderShopItems,shopList,fetchCartItem,submitForm,createOrder} from "../methods/methods.js";
+import {getandRenderShopItems,getandRenderCartItemswithPrice,submitForm,initializeOrder} from "../methods/methods.js";
 
 $(() => {
-  //create order id
-   createOrder();
+  //initialize order Id if not in cookie
 
-  // get request -get shop items
+   initializeOrder();
 
-  $.get("/")
-    .then(() => {
-      $(".shop").empty();
-      const shopItems = renderShopItems(shopList);
+  // get shop items
 
-      $(".shop").append(shopItems);
+  getandRenderShopItems();
 
-      console.log("shop rendered");
-    })
-    .catch((err) => console.log(err));
+  // get request - get cart items with total price of order;
 
-  // get request - get cart items
-
-  $.get("/").then(() => {
-    fetchCartItem();
-
-    console.log("cart rendered");
-  });
+  getandRenderCartItemswithPrice();
 
   // for submit order form modal
 
