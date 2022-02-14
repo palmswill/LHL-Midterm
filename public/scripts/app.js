@@ -1,8 +1,8 @@
-import {renderShopItems,shopList,fetchCartItem,submitForm} from "../methods/methods.js";
+import {renderShopItems,shopList,fetchCartItem,submitForm,createOrder} from "../methods/methods.js";
 
 $(() => {
   //create order id
-  // createOrder();
+   createOrder();
 
   // get request -get shop items
 
