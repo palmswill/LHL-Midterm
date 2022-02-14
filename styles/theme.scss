@@ -8,6 +8,16 @@
   --lato: "Lato", sans-serif;
   --roboto: "Roboto", sans-serif;
   --secondary-color: #0a8020;
+  --primary-color:rgb(228,72,73);
+}
+
+.light-grey-text{
+  color:rgb(192,192,192);
+
+}
+
+.light-grey{
+  background-color: rgb(192,192,192);
 }
 
 body {
@@ -30,7 +40,7 @@ button {
   color: white;
   display: flex;
   background-color: var(--secondary-color);
-  font-weight:300;
+  font-weight:400;
   border-radius: 5px;
   padding-inline: 5%;
   padding-block: 5px;

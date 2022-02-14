@@ -133,7 +133,7 @@ const renderCartTotal = (cartList) => {
     <span>Subtotal</span>
     <span>$${subTotal}</span>
   </div>
-  <div class="flex fs-300">
+  <div class="flex fs-300 light-grey-text semi-bold">
      <span><i class="fa-solid fa-angle-right"></i> 
      Total Tax</span>
     <span>$${tax}</span>

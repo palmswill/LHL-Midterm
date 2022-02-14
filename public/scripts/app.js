@@ -2,19 +2,34 @@ $(() => {
   // test data
 
   // get request -get shop items
-  const shopItems = renderShopItems(shopList);
 
-  $(".shop").append(shopItems);
+  $.get("/")
+    .then(() => {
+      $(".shop").empty();
+      const shopItems = renderShopItems(shopList);
 
-  console.log(" shop rendered");
+      $(".shop").append(shopItems);
+
+      console.log("shop rendered");
+    })
+    .catch((err) => console.log(err));
 
   // get request - get cart items
-  const cartItem = renderCartItems(cartList);
 
-  $(".basket").append(cartItem);
+  $.get("/").then(() => {
+    const cartItem = renderCartItems(cartList);
 
-  $(".price-display").empty();
-  $(".price-display").append(renderCartTotal(cartList));
+    $(".basket").empty();
+    $(".basket").append(cartItem);
 
-  console.log("cart rendered");
+    $(".price-display").empty();
+    $(".price-display").append(renderCartTotal(cartList));
+
+    console.log("cart rendered");
+  });
+
+  $(".check-out").click(function(){
+    console.log(this.classList)}
+  )
+
 });
