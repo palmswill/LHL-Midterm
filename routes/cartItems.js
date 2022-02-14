@@ -11,13 +11,13 @@ module.exports = (db) => {
   router.get("/", (req, res) => {
     let orderId = req.session.orderId;
 
-    // create new order and set cookie if no cookie
+    // create new (blank) order and set cookie if no cookie
     if (!orderId) {
       const orderQuery = `
       INSERT INTO orders (name, phone, order_notes, submitted)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
-      `
+      `;
       db.query(orderQuery, [null, null, null, false])
         .then(data => {
           orderId = data.rows[0].id;   // save order id
@@ -35,11 +35,11 @@ module.exports = (db) => {
     SELECT *
     FROM order_sushi
     WHERE order_id = $1;
-    `
+    `;
     db.query(query, [orderId])
       .then(data => {
-        const sushi = data.rows;
-        res.json({ sushi });
+        const cartItems = data.rows;
+        res.json({ cartItems });
       })
       .catch(err => {
         res
@@ -48,6 +48,7 @@ module.exports = (db) => {
       });
 
   });
+
 
   // update cart items
   // will receive an action from the request and make the appropriate query
@@ -65,20 +66,20 @@ module.exports = (db) => {
       INSERT INTO order_sushi (order_id, sushi_id, quantity)
       VALUES ($1, $2, $3)
       RETURNING *;
-      `
+      `;
     } else if (action === 'update') {
       query = `
       UPDATE order_sushi
       SET quantity = $3
       WHERE order_id = $1 AND sushi_id = $2
       RETURNING *;
-      `
+      `;
     } else {
       query = `
       DELETE FROM order_sushi
       WHERE order_id = $1 AND sushi_id = $2
       RETURNING *;
-      `
+      `;
     }
 
     db.query(query, [orderId, sushiId, quantity])
@@ -93,6 +94,28 @@ module.exports = (db) => {
       });
 
   });
+
+
+  // get order total
+  router.get('/total', (req, res) => {
+    const orderId = req.session.orderId;
+    const query = `
+    SELECT SUM(order_sushi.quantity * sushi.price) AS total
+    FROM order_sushi
+    JOIN sushi ON sushi.id = order_sushi.id
+    WHERE order_sushi.order_id = $1
+    `;
+    db.query(query, [orderId])
+    .then(data => {
+      const total = data.rows[0];
+      res.json({ total });
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: err.message });
+    });
+  })
 
 
   return router;
