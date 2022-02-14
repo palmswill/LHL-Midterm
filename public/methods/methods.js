@@ -145,3 +145,14 @@ const renderCartTotal = (cartList) => {
 
   return $PriceText;
 };
+
+
+const fetchCartItem=()=>{
+  const cartItem = renderCartItems(cartList);
+
+    $(".basket").empty();
+    $(".basket").append(cartItem);
+
+    $(".price-display").empty();
+    $(".price-display").append(renderCartTotal(cartList));
+}

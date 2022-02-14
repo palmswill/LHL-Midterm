@@ -17,28 +17,19 @@ $(() => {
   // get request - get cart items
 
   $.get("/").then(() => {
-    const cartItem = renderCartItems(cartList);
-
-    $(".basket").empty();
-    $(".basket").append(cartItem);
-
-    $(".price-display").empty();
-    $(".price-display").append(renderCartTotal(cartList));
+    fetchCartItem();
 
     console.log("cart rendered");
   });
 
-  // for submit order form modal 
+  // for submit order form modal
 
-  $(".check-out").click(function(){
+  $(".check-out").click(function () {
     $(".pop-up").addClass("active");
-  }
-  )
-  $(".cancel-modal,.submit-order").click(function(event){
+  });
+  $(".cancel-modal,.submit-order").click(function (event) {
     event.preventDefault();
 
     $(".pop-up").removeClass("active");
-
-  })
-
+  });
 });
