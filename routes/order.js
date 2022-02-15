@@ -1,4 +1,5 @@
 const express = require('express');
+const { sendSms } = require('../helpers/sendSms.js');
 const router  = express.Router();
 
 module.exports = (db) => {
@@ -41,9 +42,10 @@ module.exports = (db) => {
   router.get('/:orderId/shopItem/sushiId', (req, res) => {
     db.query(`
       INSERT INTO order_sushi (order_id, sushi_id, quantity)
-      VALUES ($1, $2, $3);
+      VALUES ($1, $2, $3)
+      RETURNING*;
       `, [req.params.orderId, req.params.sushiId, 1])
-      .then(data => res.send(data.rows))
+      .then(data => res.send(data.rows[0]))
       .catch(err => {
         res
           .status(500)
@@ -93,7 +95,9 @@ module.exports = (db) => {
       SET name = $2, phone = $3, order_notes = $4, submitted = true
       WHERE order_id = $1;
       `, [req.body.order_id, req.body.name, req.body.phone, req.body.order_notes])
-      .then(res.sendStatus(200))    // add twilio function
+      .then(data => {
+
+      })    // add twilio function
       .catch(err => {
         res
           .status(500)
