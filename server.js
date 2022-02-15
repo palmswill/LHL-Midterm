@@ -9,7 +9,6 @@ const bodyParser = require("body-parser");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
-const cookieSession = require('cookie-session');
 
 // PG database client/connection setup
 const { Pool } = require('pg');
@@ -31,24 +30,21 @@ app.use("/styles", sass({
   outputStyle: 'expanded'
 }));
 app.use(express.static("public"));
-app.use(cookieSession({
-  name: 'session',
-  keys: ['key']
-}));
+
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
 const usersRoutes = require("./routes/users");
 const widgetsRoutes = require("./routes/widgets");
-const menuRoutes = require("./routes/menu");
-const cartRoutes = require("./routes/cartItems");
+const shopItemRoutes = require("./routes/shopItem");
+const orderRoutes = require("./routes/order");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));
-app.use("/api/menu", menuRoutes(db));
-app.use("/api/cart", cartRoutes(db));
+app.use("/api/shopItem", shopItemRoutes(db));
+app.use("/api/order", orderRoutes(db));
 // Note: mount other resources here, using the same pattern above
 
 
