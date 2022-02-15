@@ -12,9 +12,9 @@ module.exports = (db) => {
       `, ['Guest', null, null, false])
       .then(data => res.send({ id: data.rows[0].id }))
       .catch(err => {
-        .res
-        .status(500)
-        .send(err.message);
+        res
+          .status(500)
+          .send(err.message);
       });
   });
 
@@ -29,7 +29,7 @@ module.exports = (db) => {
       `, [req.params.id])
       .then(data => res.send(data.rows))
       .catch(err => {
-        .res
+        res
           .status(500)
           .send(err.message);
       });
@@ -45,7 +45,7 @@ module.exports = (db) => {
       `, [req.params.orderId, req.params.sushiId, 1])
       .then(data => res.send(data.rows))
       .catch(err => {
-        .res
+        res
           .status(500)
           .send(err.message);
       });
@@ -63,7 +63,7 @@ module.exports = (db) => {
       `, [req.params.orderId, req.params.sushiId, val])
       .then(res.sendStatus(200))    //might want to check later for data.rowCount
       .catch(err => {
-        .res
+        res
           .status(500)
           .send(err.message);
       });
@@ -79,7 +79,7 @@ module.exports = (db) => {
       `, [req.params.orderId, req.params.sushiId])
       .then(res.sendStatus(200))
       .catch(err => {
-        .res
+        res
           .status(500)
           .send(err.message);
       });
@@ -95,7 +95,7 @@ module.exports = (db) => {
       `, [req.body.order_id, req.body.name, req.body.phone, req.body.order_notes])
       .then(res.sendStatus(200))    // add twilio function
       .catch(err => {
-        .res
+        res
           .status(500)
           .send(err.message);
     });

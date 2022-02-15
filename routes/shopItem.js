@@ -9,7 +9,7 @@ module.exports = (db) => {
     db.query(query)
       .then(data => res.send(data.rows))
       .catch(err => {
-        .res
+        res
           .status(500)
           .send(err.message);
       });
