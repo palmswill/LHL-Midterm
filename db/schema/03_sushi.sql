@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS sushi CASCADE;
 CREATE TABLE sushi (
-  id SERIAL PRIMARY KEY NOT NULL,
+  id SERIAL,
   name VARCHAR(255) NOT NULL,
   price Float,
   content VARCHAR(255),
