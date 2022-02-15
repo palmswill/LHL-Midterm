@@ -1,7 +1,4 @@
-// this file is for communicating with twilio
-// contain function that takes in a phone number and message
-// can be reused for sending to restaurant/restaurant send response
-require('dotenv').config()
+require('dotenv').config();
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const restaurantPhone = process.env.RESTAURANT_PHONE;
@@ -9,6 +6,7 @@ const twilioPhone = process.env.TWILIO_PHONE;
 const client = require('twilio')(accountSid, authToken);
 
 
+// send sms message using twilio
 const sendSms = function(phone, msg) {
   client.messages
     .create({
@@ -20,8 +18,7 @@ const sendSms = function(phone, msg) {
 };
 
 
-
-
+// send order to restaurant via sms
 const sendToRestaurant = function(db, orderId, order_notes) {
   db.query(`
     SELECT sushi.name as sushi, order_sushi.quantity as quantity
@@ -37,13 +34,32 @@ const sendToRestaurant = function(db, orderId, order_notes) {
       }
       msg += `notes: ${order_notes}`;
       sendSms(restaurantPhone, msg);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .send(err.message);
-  });
-}
+    });
+};
 
 
-module.exports = { sendSms, sendToRestaurant };
+// return current time plus minutes
+const completionTime = function(minutes) {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() + minutes);
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}: ${date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes()}`;
+};
+
+
+// send sms to customer notifying order completion time
+const sendToCustomer = function(db, orderId, time) {
+  const timestamp = completionTime(time);
+  db.query(`
+    UPDATE orders
+    SET time = $1
+    WHERE order_id = $2
+    RETURNING *;
+    `, [timestamp, orderId])
+    .then(data => {
+      const msg = `Hello ${data.rows[0].name}. Thank you for your order at SushiHut. Your order will be ready for pick-up in ${time} minutes.`;
+      sendSms(data.rows[0].phone, msg);
+    });
+};
+
+
+module.exports = { sendSms, sendToRestaurant, sendToCustomer };
