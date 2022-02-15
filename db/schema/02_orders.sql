@@ -5,5 +5,6 @@ CREATE TABLE orders (
   phone BIGINT,
   order_notes VARCHAR(255),
   submitted boolean,
-
+  ready_time TIMESTAMP,
+  completed boolean
 );
