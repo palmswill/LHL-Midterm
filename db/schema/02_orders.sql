@@ -4,6 +4,6 @@ CREATE TABLE orders (
   name VARCHAR(255) NOT NULL,
   phone BIGINT,
   order_notes VARCHAR(255),
-  submitted boolean
+  submitted boolean,
 
 );
