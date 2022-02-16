@@ -53,11 +53,11 @@ export const shopList = [
 ];
 
 const generateShopItemLayout = (shopItem) => {
-  const { id, name, pricePerRoll, imageUrl, content } = shopItem;
+  const { id, name, price, imageurl, content } = shopItem;
 
   let $shopItem = `<div class="shop-item flex">
   <img
-    src=${imageUrl}
+    src=${imageurl}
     alt=""
   />
   <div class="content">
@@ -66,7 +66,7 @@ const generateShopItemLayout = (shopItem) => {
   </div>
   <button id=${id} class="add-shop-item">
     <span id=${id}>Add</span>
-    <span id=${id} class="price">$${pricePerRoll}</span>
+    <span id=${id} class="price">$${price}</span>
   </button>
 </div>
   `;
@@ -85,10 +85,10 @@ export const renderShopItems = (shopList) => {
 
 // get and render shop items
 export const getandRenderShopItems = () => {
-  $.get("/")
-    .then(() => {
+  $.get("/api/shopItem")
+    .then((results) => {
       $(".shop").empty();
-      const shopItems = renderShopItems(shopList);
+      const shopItems = renderShopItems(results);
 
       $(".shop").append(shopItems);
 
@@ -186,6 +186,8 @@ const renderCartTotal = (cartList) => {
 };
 
 export const fetchCartItem = () => {
+
+  
   const cartItem = renderCartItems(cartList);
 
   $(".basket").empty();

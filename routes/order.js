@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { sendToRestaurant } = require('../helpers/sendSms.js');
+// const { sendToRestaurant } = require('../helpers/sendSms.js');
 
 const router  = express.Router();
 const bodyParser = require('body-parser');
@@ -102,7 +102,7 @@ module.exports = (db) => {
       WHERE id = $1;
       `, [req.body.order_id, req.body.name, req.body.phone, req.body.order_notes])
       .then(() => {
-        sendToRestaurant(db, req.body.order_id, req.body.order_notes);
+        // sendToRestaurant(db, req.body.order_id, req.body.order_notes);
         res.send('sent to restaurant');
       })    // send order to restaurant
       .catch(err => {
