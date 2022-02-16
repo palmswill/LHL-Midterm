@@ -1,9 +1,10 @@
 import { getandRenderCartItemswithPrice } from "./methods.js";
 export const initalizeCart = () => {
   $(() => {
-    // initialize cart
-    getandRenderCartItemswithPrice();
-
+    // initialize cart if order_id exist
+    if (Cookies.get("order_id")) {
+      getandRenderCartItemswithPrice();
+    }
     $(document).on("click", ".increment", function (event) {
       console.log(Cookies.get("order_id"), event.target.id, "incremented");
       $.get(

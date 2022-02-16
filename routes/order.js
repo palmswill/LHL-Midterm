@@ -64,7 +64,7 @@ module.exports = (db) => {
 
   // GET request - /order/:id/cartItem/:id
   // delete cart item given order id, sushi id
-  router.get('/:orderId/cartItem/:sushiId/delete', (req, res) => {
+  router.post('/:orderId/cartItem/:sushiId/delete', (req, res) => {
     db.query(`
         DELETE FROM order_sushi
         WHERE order_id = $1 AND sushi_id = $2;
