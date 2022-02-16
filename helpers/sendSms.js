@@ -13,8 +13,7 @@ const sendSms = function(phone, msg) {
        body: msg,
        from: twilioPhone,
        to: phone
-     })
-    .then(true);
+     });
 };
 
 

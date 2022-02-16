@@ -18,11 +18,7 @@ module.exports = (db) => {
       ;
       `, [req.params.id])
       .then(data => res.send(data.rows))
-      .catch(err => {
-        res
-          .status(500)
-          .send(err.message);
-      });
+      .catch(err => res.status(500).send(err.message));
   });
 
 
@@ -38,11 +34,7 @@ module.exports = (db) => {
       RETURNING*;
       `, [req.params.orderId, req.params.sushiId, 1])
       .then(data => res.send(data.rows[0]))
-      .catch(err => {
-        res
-          .status(500)
-          .send(err.message);
-      });
+      .catch(err => res.status(500).send(err.message));
   });
 
 
@@ -55,12 +47,8 @@ module.exports = (db) => {
           DELETE FROM order_sushi
           WHERE order_id = $1 AND sushi_id = $2;
           `, [req.params.orderId, req.params.sushiId])
-          .then(res.sendStatus(200))
-          .catch(err => {
-              res
-                .status(500)
-                .send(err.message);
-            });
+          .then(() => res.sendStatus(200))
+          .catch(err => res.status(500).send(err.message));
     }
 
     // handle increment/decrement
@@ -70,13 +58,8 @@ module.exports = (db) => {
       SET quantity = quantity + $3
       WHERE order_id = $1 AND sushi_id = $2;
       `, [req.params.orderId, req.params.sushiId, val])
-      .then(res.sendStatus(200))    //might want to check later for data.rowCount
-      .catch(err => {
-        console.log(err.message);
-        res
-          .sendStatus(500)
-          .send(err.message);
-      });
+      .then(() => res.sendStatus(200))
+      .catch(err => res.status(500).send(err.message));
   });
 
 
@@ -89,12 +72,8 @@ module.exports = (db) => {
       RETURNING *;
       `)
       .then(data => res.send({ id: data.rows[0].id }))
-      .catch(err => {
-        res
-        .status(500)
-        .send(err.message);
-      });
-    });
+      .catch(err => res.status(500).send(err.message));
+  });
 
 
   // POST request - /order/submit
@@ -107,14 +86,9 @@ module.exports = (db) => {
       `, [req.body.order_id, req.body.name, req.body.phone, req.body.order_notes])
       .then(() => {
         sendToRestaurant(db, req.body.order_id, req.body.order_notes);
-        res.send('sent to restaurant');
-      })    // send order to restaurant
-      .catch(err => {
-        res
-          .status(500)
-          .send(err.message);
-    });
-
+        return res.send('sent to restaurant');
+      })
+      .catch(err => res.status(500).send(err.message));
   });
 
 
