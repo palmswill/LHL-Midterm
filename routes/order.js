@@ -11,9 +11,11 @@ module.exports = (db) => {
   // get all cart items given order id
   router.get('/:id/cartItem', (req, res) => {
     db.query(`
-      SELECT *
+      SELECT sushi.id, name, price , quantity
       FROM order_sushi
-      WHERE order_id = $1;
+      JOIN sushi ON sushi.id=sushi_id
+      WHERE order_id = $1
+      ;
       `, [req.params.id])
       .then(data => res.send(data.rows))
       .catch(err => {

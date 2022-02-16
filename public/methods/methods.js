@@ -192,6 +192,7 @@ const renderCartTotal = (cartList) => {
 export const fetchCartItem = () => {
   $.get(`/api/order/${Cookies.get("order_id")}/cartItem`)
     .then((cartList) => {
+      console.log(cartList);
       $(".basket").empty();
       $(".basket").append(renderCartItems(cartList));
       $(".price-display").empty();
