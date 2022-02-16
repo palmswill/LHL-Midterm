@@ -14,7 +14,7 @@ module.exports = (db) => {
       SELECT sushi.id, name, price , quantity
       FROM order_sushi
       JOIN sushi ON sushi.id=sushi_id
-      WHERE order_id = $1
+      WHERE order_id = $1 AND quantity > 0
       ;
       `, [req.params.id])
       .then(data => res.send(data.rows))
@@ -64,7 +64,7 @@ module.exports = (db) => {
 
   // GET request - /order/:id/cartItem/:id
   // delete cart item given order id, sushi id
-  router.delete('/:orderId/cartItem/:sushiId', (req, res) => {
+  router.get('/:orderId/cartItem/:sushiId/delete', (req, res) => {
     db.query(`
         DELETE FROM order_sushi
         WHERE order_id = $1 AND sushi_id = $2;
