@@ -167,7 +167,7 @@ const renderCartTotal = (cartList) => {
     subTotal += price * quantity;
   });
 
-  subTotal=Math.round(subTotal*100)/100;
+  subTotal = Math.round(subTotal * 100) / 100;
 
   let tax = Math.round(0.13 * subTotal * 100) / 100;
 
@@ -227,8 +227,8 @@ export const submitForm = () => {
     obj[name] = value;
   }
   // form-submission after adding order_id;
-  $.get("/")
-    .then(console.log(obj))
+  $.post("/api/order/submit", obj)
+    .then((result) => console.log(result))
     .catch((err) => console.log(err));
 };
 

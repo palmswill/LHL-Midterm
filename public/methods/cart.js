@@ -6,12 +6,23 @@ export const initalizeCart = () => {
 
     $(document).on("click", ".increment", function (event) {
       console.log(Cookies.get("order_id"), event.target.id, "incremented");
-
-      getandRenderCartItemswithPrice();
+      $.get(
+        `/api/order/${Cookies.get("order_id")}/cartItem/${
+          event.target.id
+        }/increment`
+      )
+        .then(getandRenderCartItemswithPrice())
+        .catch((err) => console.log(err));
     });
     $(document).on("click", ".decrement", function (event) {
       console.log(Cookies.get("order_id"), event.target.id, "decremented");
-      getandRenderCartItemswithPrice();
+      $.get(
+        `/api/order/${Cookies.get("order_id")}/cartItem/${
+          event.target.id
+        }/decrement`
+      )
+        .then(getandRenderCartItemswithPrice())
+        .catch((err) => console.log(err));
     });
 
     $(document).on("click", ".cancel-item", function (event) {
