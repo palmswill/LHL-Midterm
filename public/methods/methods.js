@@ -222,3 +222,43 @@ export const submitForm = () => {
     .then(console.log(obj))
     .catch((err) => console.log(err));
 };
+
+// order -status
+
+const renderOrderItem = (cartItem) => {
+  const { name, price, quantity } = cartItem;
+
+  let $ItemText = `
+  <div id= "${name}">
+    <div>${name}</div>
+    <div>$${price}</div>
+    <div>${quantity}</div>
+  </div>
+  `;
+  return $ItemText;
+};
+
+const renderOrderItemList=(cartItems)=>{
+  let itemList="";
+  for (item of cartItems){
+    itemList += renderOrderItem(item)
+  }
+return itemList;
+}
+
+export const renderOrder = (orderObject) => {
+  const { name, email, phone, cartItems,estimated_completion,completed} = orderObject;
+
+  const $orderText = `
+  <div>
+    <h5>${name} 's Order</h5>
+    <div>  
+      <span>Estimated Completion in: ${estimated_completion}</span>
+      <span class="complete" style="color:${completed?"green":"lightgrey"}">${completed?"completed":"incomplete"}</span>
+   </div>
+   <div class="items">
+   ${renderOrderItemList(cartItems)}
+   </div>
+  </div>`;
+  return $orderText;
+};

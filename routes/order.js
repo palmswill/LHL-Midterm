@@ -1,25 +1,12 @@
 const express = require('express');
-// const { sendSms } = require('../helpers/sendSms.js');
+
+const { sendToRestaurant } = require('../helpers/sendSms.js');
+
 const router  = express.Router();
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
 module.exports = (db) => {
-  // GET request - /order/initialize
-  // create empty order and return orderId;
-  router.get('/initialize', (req, res) => {
-    db.query(`
-      INSERT INTO orders (name, phone, order_notes, submitted)
-      VALUES ($1, $2, $3, $4)
-      RETURNING *;
-      `, ['Guest', null, null, false])
-      .then(data => res.send({ id: data.rows[0].id }))
-      .catch(err => {
-        res
-          .status(500)
-          .send(err.message);
-      });
-  });
-
-
   // GET request - /order/:id/cartItem
   // get all cart items given order id
   router.get('/:id/cartItem', (req, res) => {
@@ -39,7 +26,7 @@ module.exports = (db) => {
 
   // GET request-/order/:id/shopItem/:id
   // Add shop item into order , set default quantity to 1
-  router.get('/:orderId/shopItem/sushiId', (req, res) => {
+  router.get('/:orderId/shopItem/:sushiId', (req, res) => {
     db.query(`
       INSERT INTO order_sushi (order_id, sushi_id, quantity)
       VALUES ($1, $2, $3)
@@ -65,47 +52,65 @@ module.exports = (db) => {
       `, [req.params.orderId, req.params.sushiId, val])
       .then(res.sendStatus(200))    //might want to check later for data.rowCount
       .catch(err => {
+        console.log(err.message);
         res
-          .status(500)
+          .statusStatus(500)
           .send(err.message);
       });
   });
 
 
-  // GET request - /order/:id/cartItem/:id/delete
+  // GET request - /order/:id/cartItem/:id
   // delete cart item given order id, sushi id
-  router.get('/:orderId/cartItem/sushiId/delete', (req, res) => {
+  router.delete('/:orderId/cartItem/:sushiId', (req, res) => {
     db.query(`
-      DELETE FROM order_sushi
-      WHERE order_id = $1 AND sushi_id = $2
-      `, [req.params.orderId, req.params.sushiId])
-      .then(res.sendStatus(200))
+        DELETE FROM order_sushi
+        WHERE order_id = $1 AND sushi_id = $2;
+        `, [req.params.orderId, req.params.sushiId])
+        .then(res.sendStatus(200))
+        .catch(err => {
+            res
+              .status(500)
+              .send(err.message);
+          });
+      });
+
+
+  // POST request - /order
+  // create empty order and return orderId;
+  router.post('/', (req, res) => {
+    db.query(`
+      INSERT INTO orders
+      DEFAULT VALUES
+      RETURNING *;
+      `)
+      .then(data => res.send({ id: data.rows[0].id }))
       .catch(err => {
         res
-          .status(500)
-          .send(err.message);
+        .status(500)
+        .send(err.message);
       });
-  });
+    });
 
 
   // POST request - /order/submit
-  router.post('/submit', (req, res) => {
+  router.post('/submit', jsonParser, (req, res) => {
+    console.log([req.body.order_id, req.body.name, req.body.phone, req.body.order_notes]);
     db.query(`
       UPDATE orders
       SET name = $2, phone = $3, order_notes = $4, submitted = true
-      WHERE order_id = $1;
+      WHERE id = $1;
       `, [req.body.order_id, req.body.name, req.body.phone, req.body.order_notes])
-      .then(data => {
-
-      })    // add twilio function
+      .then(() => {
+        sendToRestaurant(db, req.body.order_id, req.body.order_notes);
+        res.send('sent to restaurant');
+      })    // send order to restaurant
       .catch(err => {
         res
           .status(500)
           .send(err.message);
     });
 
-
-    // TODO: add twilio function to handle sending order to restaurant
   });
 
 

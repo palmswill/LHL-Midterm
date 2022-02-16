@@ -1,0 +1,15 @@
+.status-container{
+  position:relative;
+  width:100%;
+  height:100%;
+
+  .cancel-modal{
+    position:absolute;
+    right:5%;
+    top:5%;
+
+    &:hover{
+      cursor: pointer;
+    }
+  }
+}

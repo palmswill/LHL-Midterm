@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS sushi CASCADE;
 CREATE TABLE sushi (
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  price Float,
+  price FLOAT,
   content VARCHAR(255),
-  imageUrl VARCHAR(255)
+  imageUrl VARCHAR(255),
 
+  UNIQUE(id)
 );
-

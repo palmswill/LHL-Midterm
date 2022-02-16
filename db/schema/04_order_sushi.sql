@@ -1,8 +1,9 @@
-DROP TABLE IF EXISTS sushi CASCADE;
-CREATE TABLE sushi (
-  id SERIAL,
+DROP TABLE IF EXISTS order_sushi CASCADE;
+CREATE TABLE order_sushi (
+  id SERIAL PRIMARY KEY,
   order_id INTEGER references orders(id),
   sushi_id INTEGER references sushi(id),
-  quantity INTEGER
-);
+  quantity INTEGER,
 
+  UNIQUE(id)
+);

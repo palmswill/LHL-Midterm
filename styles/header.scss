@@ -5,12 +5,18 @@ header {
 nav {
   padding: 1.5vh 2%;
   display: flex;
-  height: var(--nav-height);
+  height:6ch;
   background-color: white;
   width: 100%;
   border-block: 1px solid var(--border-color);
+  align-items:center;
 }
 
 nav > * {
   max-height: 100%;
+}
+
+nav > .status-button{
+  width:22ch;
+  margin-left:auto;
 }
