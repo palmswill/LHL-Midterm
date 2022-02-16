@@ -1,0 +1,62 @@
+@import "default.scss";
+
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400&display=swap");
+:root {
+  --border-color: rgba(165, 165, 165, 0.438);
+  --lato: "Lato", sans-serif;
+  --roboto: "Roboto", sans-serif;
+  --secondary-color: #0a8020;
+  --primary-color:rgb(228,72,73);
+}
+
+.light-grey-text{
+  color:rgb(192,192,192);
+
+}
+
+.light-grey{
+  background-color: rgb(192,192,192);
+}
+
+body {
+  font-family: var(--roboto);
+  font-weight: 200;
+}
+
+.bold{
+  font-weight:400;
+}
+
+.semi-bold{
+  font-weight:300;
+}
+
+button {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  background-color: var(--secondary-color);
+  font-weight:400;
+  border-radius: 5px;
+  padding-inline: 5%;
+  padding-block: 5px;
+
+  overflow: hidden;
+  outline: none;
+
+  span {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+input,textarea{
+  outline:none;
+  border:none;
+  box-shadow:none;
+}

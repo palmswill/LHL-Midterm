@@ -1,0 +1,16 @@
+header {
+  width: 100%;
+}
+
+nav {
+  padding: 1.5vh 2%;
+  display: flex;
+  height: var(--nav-height);
+  background-color: white;
+  width: 100%;
+  border-block: 1px solid var(--border-color);
+}
+
+nav > * {
+  max-height: 100%;
+}
