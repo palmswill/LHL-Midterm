@@ -1,6 +1,6 @@
 const express = require('express');
 
-// const { sendToRestaurant } = require('../helpers/sendSms.js');
+const { sendToRestaurant } = require('../helpers/sendSms.js');
 
 const router  = express.Router();
 const bodyParser = require('body-parser');
@@ -28,10 +28,13 @@ module.exports = (db) => {
 
   // GET request-/order/:id/shopItem/:id
   // Add shop item into order , set default quantity to 1
+  // if cart item exist, add one to quantity
   router.get('/:orderId/shopItem/:sushiId', (req, res) => {
     db.query(`
       INSERT INTO order_sushi (order_id, sushi_id, quantity)
       VALUES ($1, $2, $3)
+      ON CONFLICT (order_id, sushi_id)
+      DO UPDATE SET quantity = EXCLUDED.quantity + 1
       RETURNING*;
       `, [req.params.orderId, req.params.sushiId, 1])
       .then(data => res.send(data.rows[0]))
@@ -104,7 +107,7 @@ module.exports = (db) => {
       WHERE id = $1;
       `, [req.body.order_id, req.body.name, req.body.phone, req.body.order_notes])
       .then(() => {
-        // sendToRestaurant(db, req.body.order_id, req.body.order_notes);
+        sendToRestaurant(db, req.body.order_id, req.body.order_notes);
         res.send('sent to restaurant');
       })    // send order to restaurant
       .catch(err => {
