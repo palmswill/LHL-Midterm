@@ -49,6 +49,21 @@ module.exports = (db) => {
   // GET request - /order/:id/cartItem/:id/:increment
   // increment or decrement cart items given order id, sushi id, manipulation
   router.get('/:orderId/cartItem/:sushiId/:manipulation', (req, res) => {
+    // handle delete
+    if (req.params.manipulation === 'delete') {
+      return db.query(`
+          DELETE FROM order_sushi
+          WHERE order_id = $1 AND sushi_id = $2;
+          `, [req.params.orderId, req.params.sushiId])
+          .then(res.sendStatus(200))
+          .catch(err => {
+              res
+                .status(500)
+                .send(err.message);
+            });
+    }
+
+    // handle increment/decrement
     const val = req.params.manipulation === 'increment' ? 1 : -1;
     db.query(`
       UPDATE order_sushi
@@ -63,22 +78,6 @@ module.exports = (db) => {
           .send(err.message);
       });
   });
-
-
-  // GET request - /order/:id/cartItem/:id
-  // delete cart item given order id, sushi id
-  router.get('/:orderId/cartItem/:sushiId/delete', (req, res) => {
-    db.query(`
-        DELETE FROM order_sushi
-        WHERE order_id = $1 AND sushi_id = $2;
-        `, [req.params.orderId, req.params.sushiId])
-        .then(res.sendStatus(200))
-        .catch(err => {
-            res
-              .status(500)
-              .send(err.message);
-          });
-      });
 
 
   // POST request - /order
