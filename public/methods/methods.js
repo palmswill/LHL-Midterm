@@ -2,10 +2,14 @@
 
 export const initializeOrder = () => {
   let order_id = Cookies.get("order_id");
-
-  // if no order id in cookes, set the order_id
+  // if order_id is not defined in cookie, get an order_id;
   if (!order_id) {
-    $.get("").then(() => Cookies.set("order_id", 1));
+    $.post("/api/order/")
+      .then((result) => {
+        console.log(result);
+        Cookies.set("order_id", JSON.stringify(result.id));
+      })
+      .catch((err) => console.log(err));
   }
   console.log("order_id:", Cookies.get("order_id"));
 };
@@ -186,14 +190,14 @@ const renderCartTotal = (cartList) => {
 };
 
 export const fetchCartItem = () => {
-
-  
-  const cartItem = renderCartItems(cartList);
-
-  $(".basket").empty();
-  $(".basket").append(cartItem);
-  $(".price-display").empty();
-  $(".price-display").append(renderCartTotal(cartList));
+  $.get(`/api/order/${Cookies.get("order_id")}/cartItem`)
+    .then((cartList) => {
+      $(".basket").empty();
+      $(".basket").append(renderCartItems(cartList));
+      $(".price-display").empty();
+      $(".price-display").append(renderCartTotal(cartList));
+    })
+    .catch((err) => console.log(err));
 };
 
 export const getandRenderCartItemswithPrice = () => {
@@ -240,23 +244,26 @@ const renderOrderItem = (cartItem) => {
   return $ItemText;
 };
 
-const renderOrderItemList=(cartItems)=>{
-  let itemList="";
-  for (item of cartItems){
-    itemList += renderOrderItem(item)
+const renderOrderItemList = (cartItems) => {
+  let itemList = "";
+  for (item of cartItems) {
+    itemList += renderOrderItem(item);
   }
-return itemList;
-}
+  return itemList;
+};
 
 export const renderOrder = (orderObject) => {
-  const { name, email, phone, cartItems,estimated_completion,completed} = orderObject;
+  const { name, email, phone, cartItems, estimated_completion, completed } =
+    orderObject;
 
   const $orderText = `
   <div>
     <h5>${name} 's Order</h5>
     <div>  
       <span>Estimated Completion in: ${estimated_completion}</span>
-      <span class="complete" style="color:${completed?"green":"lightgrey"}">${completed?"completed":"incomplete"}</span>
+      <span class="complete" style="color:${
+        completed ? "green" : "lightgrey"
+      }">${completed ? "completed" : "incomplete"}</span>
    </div>
    <div class="items">
    ${renderOrderItemList(cartItems)}
