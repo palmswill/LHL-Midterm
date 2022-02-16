@@ -169,7 +169,7 @@ const renderCartTotal = (cartList) => {
 
   let tax = Math.round(0.13 * subTotal * 100) / 100;
 
-  let totalPrice = Math.round(subTotal + tax * 100) / 100;
+  let totalPrice = Math.round((subTotal + tax) * 100) / 100;
 
   const $PriceText = `
   <div class="flex bold">
