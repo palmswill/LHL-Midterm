@@ -74,7 +74,7 @@ module.exports = (db) => {
       .catch(err => {
         console.log(err.message);
         res
-          .statusStatus(500)
+          .sendStatus(500)
           .send(err.message);
       });
   });
