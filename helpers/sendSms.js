@@ -14,7 +14,7 @@ const sendSms = function(phone, msg) {
        from: twilioPhone,
        to: phone
      })
-    .then(message => console.log(message.body.split(' ')[7]));
+    .then(true);
 };
 
 
@@ -24,15 +24,14 @@ const sendToRestaurant = function(db, orderId, order_notes) {
     SELECT sushi.name as sushi, order_sushi.quantity as quantity
     FROM order_sushi
     JOIN sushi ON sushi.id = order_sushi.sushi_id
-    WHERE order_sushi.order_id = ${orderId}
-    GROUP BY sushi.name;
+    WHERE order_sushi.order_id = ${orderId};
     `)
     .then(data => {
-      let msg = `orderId: ${orderId}\n`;
+      let msg = `\nOrder number: ${orderId}\n\n`;
       for (const item of data.rows) {
-        msg += `${item.name}: ${item.quantity}\nPlease reply with order number and completion time in minutes`;
+        msg += `${item.sushi}: ${item.quantity}\n`;
       }
-      msg += `notes: ${order_notes}`;
+      msg += `\nNotes: ${order_notes}\n\nPlease reply with order number and completion time in minutes`;
       sendSms(restaurantPhone, msg);
     });
 };
@@ -51,13 +50,13 @@ const sendToCustomer = function(db, orderId, time) {
   const timestamp = completionTime(time);
   db.query(`
     UPDATE orders
-    SET time = $1
-    WHERE order_id = $2
+    SET completion_time = $1
+    WHERE id = $2
     RETURNING *;
     `, [timestamp, orderId])
     .then(data => {
       const msg = `Hello ${data.rows[0].name}. Thank you for your order at SushiHut. Your order will be ready for pick-up in ${time} minutes.`;
-      sendSms(data.rows[0].phone, msg);
+      sendSms(data.rows[0].phone, msg)
     });
 };
 
