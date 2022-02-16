@@ -41,7 +41,7 @@ const sendToRestaurant = function(db, orderId, order_notes) {
 const completionTime = function(minutes) {
   const date = new Date();
   date.setMinutes(date.getMinutes() + minutes);
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}: ${date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes()}`;
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}: ${date.getMinutes() < 10 ? '0' + date.getMinutes().toString() : date.getMinutes()}`;
 };
 
 
