@@ -1,14 +1,32 @@
-.status-container{
-  position:relative;
-  width:100%;
-  height:100%;
+.status-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  overflow-y:auto;
 
-  .cancel-modal{
-    position:absolute;
-    right:5%;
-    top:5%;
+  h3 {
+    margin-bottom: 5%;
+  }
 
-    &:hover{
+  .order-content {
+    border: 1px solid lightgray;
+    padding: 1rem;
+    .cart-item {
+      display: flex;
+
+      > * {
+        margin-right: 5%;
+      }
+    }
+  }
+
+  .cancel-modal {
+    position: absolute;
+    right: 5%;
+    top: 5%;
+
+    &:hover {
       cursor: pointer;
     }
   }

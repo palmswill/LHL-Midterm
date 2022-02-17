@@ -224,10 +224,10 @@ const renderOrderItem = (cartItem) => {
   const { name, price, quantity } = cartItem;
 
   let $ItemText = `
-  <div id= "${name}">
+  <div class="cart-item" id= "${name}">
     <div>${name}</div>
     <div>$${price}</div>
-    <div>${quantity}</div>
+    <div>x ${quantity}</div>
   </div>
   `;
   return $ItemText;
@@ -246,13 +246,13 @@ export const renderOrder = (orderObject) => {
     orderObject;
 
   const $orderText = `
-  <div>
+  <div class>
     <h5>${name} 's Order</h5>
     <div>  
-      <span>Estimated Completion in: ${estimated_completion}</span>
-      <span class="complete" style="color:${
-        completed ? "green" : "lightgrey"
-      }">${completed ? "completed" : "incomplete"}</span>
+      <span>Estimated Completed in: ${estimated_completion?estimated_completion:"wating for restaurant response..."}</span>
+      <div class="complete" style="color:${
+        completed ? "green" : "red"
+      }">${completed ? "completed" : "incomplete"}</div>
    </div>
    <div class="items">
    ${renderOrderItemList(cartItems)}
@@ -273,7 +273,7 @@ export const renderOrderList = () => {
 };
 
 export const initializeOrderStatus = () => {
-  const submittedOrderList = Cookies.get("submitted_order")
+  let submittedOrderList = Cookies.get("submitted_order")
     ? JSON.parse(Cookies.get("submitted_order"))
     : undefined;
   if (!submittedOrderList) {
@@ -312,12 +312,12 @@ export const submitForm = () => {
   // phone number must be 10 digit number
   var regex = /^[0-9]+$/;
   
-  
+
   if (obj.phone.length === 10 && obj.phone.match(regex)) {
     obj.phone = "+" + obj.phone;
     // form-submission after adding order_id;
 
-    $.get("/")
+    $.post("api/order/submit",obj)
       .then($(".phone-error").empty())
       .then($(".pop-up").removeClass("active"))
       .then(
