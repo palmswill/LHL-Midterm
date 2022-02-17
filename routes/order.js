@@ -77,7 +77,7 @@ module.exports = (db) => {
       INSERT INTO order_sushi (order_id, sushi_id, quantity)
       VALUES ($1, $2, $3)
       ON CONFLICT (order_id, sushi_id)
-      DO UPDATE SET quantity = EXCLUDED.quantity + 1
+      DO NOTHING
       RETURNING*;
       `, [req.params.orderId, req.params.sushiId, 1])
       .then(data => res.send(data.rows[0]))
