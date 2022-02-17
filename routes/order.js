@@ -32,29 +32,36 @@ module.exports = (db) => {
       WHERE orders.id = $1 AND QUANTITY > 0
       ;`, [req.params.orderId])
       .then(data => {
-        const order = {
-          "id": data.rows[0].id,
-        "name": data.rows[0].order_name,
-        "phone": data.rows[0].phone,
-        "order_notes": data.rows[0].order_notes,
-        "submitted": data.rows[0].submitted,
-        "completed": data.rows[0].completed,
-        "completion_time": data.rows[0].completion_time,
-        "order_id": data.rows[0].order_id,
-        "cartItems": []
-        };
-        for (const item of data.rows) {
-          const obj = {
-            name: item.name,
-            content: item.content,
-            price: item.price,
-            quantity: item.quantity
+        if(data.rows.length === 0) {
+          res.send("cart is empty")
+        } else {
+          const order = {
+            "id": data.rows[0].id,
+          "name": data.rows[0].order_name,
+          "phone": data.rows[0].phone,
+          "order_notes": data.rows[0].order_notes,
+          "submitted": data.rows[0].submitted,
+          "completed": data.rows[0].completed,
+          "completion_time": data.rows[0].completion_time,
+          "order_id": data.rows[0].order_id,
+          "cartItems": []
           };
-          order.cartItems.push(obj);
+          for (const item of data.rows) {
+            console.log(item);
+            const obj = {
+              name: item.name,
+              content: item.content,
+              price: item.price,
+              quantity: item.quantity
+            };
+            order.cartItems.push(obj);
+          }
+          res.send(order);
         }
-        res.send(order)})
+        })
 
         .catch(err => {
+          console.log(err)
           res
             .status(500)
             .send(err.message);
