@@ -317,13 +317,19 @@ export const submitForm = () => {
   // phone number must be 10 digit number
   var regex = /^[0-9]+$/;
 
-  if (obj.phone.length === 10 && obj.phone.match(regex)) {
+  if (obj.phone.length === 10 && obj.phone.match(regex) && $(".basket").is(':empty')) {
     obj.phone = "+" + obj.phone;
     // form-submission after adding order_id;
 
     $.post("api/order/submit", obj)
       .then($(".phone-error").empty())
-      .then($(".pop-up").removeClass("active"))
+      .then($(".submit-notice").append("Order Succeed!"))
+      .then(
+        setTimeout(() => {
+          $(".pop-up").removeClass("active");
+          $(".submit-notice").empty();
+        }, 3000)
+      )
       .then(
         /// set current order to submitted order list
         Cookies.set(
@@ -337,10 +343,10 @@ export const submitForm = () => {
       .then(Cookies.remove("order_id")) ///remove current order
       .then(initializeOrderStatus())
       .then(initializeOrder()) ///set up a new order
-      .then(getandRenderCartItemswithPrice())///regenerate a new cart;
+      .then(getandRenderCartItemswithPrice()) ///regenerate a new cart;
       .catch((err) => console.log(err));
   } else {
     $(".phone-error").empty();
-    $(".phone-error").append("phone number must be a 10 digits number");
+    $(".phone-error").append("phone number must be a 10 digits number or cart must not be empty!");
   }
 };
