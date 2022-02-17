@@ -7,7 +7,7 @@ export const initalizeForm = () => {
     $(".form-modal").addClass("active");
   });
   // close form on form submit/close form bottom;
-  $(".cancel-modal, .submit-order").click(function () {
+  $(".cancel-modal").click(function () {
     $(".pop-up").removeClass("active");
     
   });

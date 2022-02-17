@@ -21,6 +21,46 @@ module.exports = (db) => {
       .catch(err => res.status(500).send(err.message));
   });
 
+  // GET request - /order/:id
+  // get order status by order id with cart item information
+  router.get('/:orderId', (req, res) => {
+    db.query(`
+      SELECT *, orders.name as order_name
+      FROM orders
+      JOIN order_sushi ON orders.id=order_id
+      JOIN sushi ON sushi.id=order_sushi.sushi_id
+      WHERE orders.id = $1 AND QUANTITY > 0
+      ;`, [req.params.orderId])
+      .then(data => {
+        const order = {
+          "id": data.rows[0].id,
+        "name": data.rows[0].order_name,
+        "phone": data.rows[0].phone,
+        "order_notes": data.rows[0].order_notes,
+        "submitted": data.rows[0].submitted,
+        "completed": data.rows[0].completed,
+        "completion_time": data.rows[0].completion_time,
+        "order_id": data.rows[0].order_id,
+        "cartItems": []
+        };
+        for (const item of data.rows) {
+          const obj = {
+            name: item.name,
+            content: item.content,
+            price: item.price,
+            quantity: item.quantity
+          };
+          order.cartItems.push(obj);
+        }
+        res.send(order)})
+
+        .catch(err => {
+          res
+            .status(500)
+            .send(err.message);
+      });
+  })
+
 
   // GET request-/order/:id/shopItem/:id
   // Add shop item into order , set default quantity to 1

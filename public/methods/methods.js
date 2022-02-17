@@ -138,7 +138,12 @@ const generateCartItem = (cartItem) => {
       <div>${name}</div>
       <div> x ${quantity}
       <i id=${id} class="fa-solid fa-plus increment"></i>
-      <i id=${id} class="fa-solid fa-minus decrement"></i>
+      ${
+        quantity === 1
+          ? ""
+          : `<i id=${id} class="fa-solid fa-minus decrement"></i>
+      `
+      }
       </div>
     </div>
     <div class="price-tag">$${price}</div>
@@ -226,10 +231,22 @@ export const submitForm = () => {
 
     obj[name] = value;
   }
-  // form-submission after adding order_id;
-  $.post("/api/order/submit", obj)
-    .then((result) => console.log(result))
-    .catch((err) => console.log(err));
+
+  // phone number must be 10 digit number
+  var regex = /^[0-9]+$/;
+
+  if (obj.phone.length === 10 && obj.phone.match(regex)) {
+    obj.phone = "+" + obj.phone;
+    // form-submission after adding order_id;
+    $.post("/api/order/submit", obj)
+      .then((result) => console.log(result))
+      .then($(".phone-error").empty())
+      .then($(".pop-up").removeClass("active"))
+      .catch((err) => console.log(err));
+  } else {
+    $(".phone-error").empty();
+    $(".phone-error").append("phone number must be a 10 digits number");
+  }
 };
 
 // order -status
