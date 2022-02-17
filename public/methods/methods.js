@@ -6,7 +6,7 @@ export const initializeOrder = () => {
   if (!order_id) {
     $.post("/api/order/")
       .then((result) => {
-        console.log(result);
+        console.log(result.id);
         Cookies.set("order_id", JSON.stringify(result.id));
       })
       .catch((err) => console.log(err));
@@ -218,6 +218,88 @@ export const getandRenderCartItemswithPrice = () => {
     .catch((err) => console.log(err));
 };
 
+// order -status
+
+const renderOrderItem = (cartItem) => {
+  const { name, price, quantity } = cartItem;
+
+  let $ItemText = `
+  <div class="cart-item" id= "${name}">
+    <div>${name}</div>
+    <div>$${price}</div>
+    <div>x ${quantity}</div>
+  </div>
+  `;
+  return $ItemText;
+};
+
+const renderOrderItemList = (cartItems) => {
+  let itemList = "";
+  for (const item of cartItems) {
+    itemList += renderOrderItem(item);
+  }
+  return itemList;
+};
+
+export const renderOrder = (orderObject) => {
+  const { name, email, phone, cartItems, estimated_completion, completed } =
+    orderObject;
+
+  const $orderText = `
+  <div class>
+    <h5>${name} 's Order</h5>
+    <div>  
+      <span>Estimated Completed in: ${
+        estimated_completion
+          ? estimated_completion
+          : "wating for restaurant response..."
+      }</span>
+      <div class="complete" style="color:${completed ? "green" : "red"}">${
+    completed ? "completed" : "incomplete"
+  }</div>
+   </div>
+   <div class="items">
+   ${renderOrderItemList(cartItems)}
+   </div>
+  </div>`;
+  return $orderText;
+};
+
+export const renderOrderList = () => {
+  const orderList = JSON.parse(Cookies.get("submitted_order"));
+  if (orderList && orderList.length) {
+    for (const orderId of orderList) {
+      $.get(`/api/order/${orderId}`)
+        .then((result) => renderOrder(result))
+        .then((renderResult) => $(".order-content").append(renderResult));
+    }
+  }
+};
+
+export const initializeOrderStatus = () => {
+  let submittedOrderList = Cookies.get("submitted_order")
+    ? JSON.parse(Cookies.get("submitted_order"))
+    : undefined;
+  if (!submittedOrderList) {
+    Cookies.set("submitted_order", JSON.stringify([]));
+    submittedOrderList = [];
+  }
+
+  Promise.all(
+    submittedOrderList.map((orderId) => $.get(`/api/order/${orderId}`))
+  )
+    .then((resultList) => {
+      $(".order-content").empty();
+      resultList.forEach((result) => {
+        if (result.submitted) {
+          $(".order-content").append(renderOrder(result));
+        }
+      });
+    })
+    .then(console.log("orderstatus initialized"))
+    .catch((err) => console.log(err));
+};
+
 // form submission
 
 export const submitForm = () => {
@@ -235,59 +317,36 @@ export const submitForm = () => {
   // phone number must be 10 digit number
   var regex = /^[0-9]+$/;
 
-  if (obj.phone.length === 10 && obj.phone.match(regex)) {
+  if (obj.phone.length === 10 && obj.phone.match(regex) && $(".basket").is(':empty')) {
     obj.phone = "+" + obj.phone;
     // form-submission after adding order_id;
-    $.post("/api/order/submit", obj)
-      .then((result) => console.log(result))
+
+    $.post("api/order/submit", obj)
       .then($(".phone-error").empty())
-      .then($(".pop-up").removeClass("active"))
+      .then($(".submit-notice").append("Order Succeed!"))
+      .then(
+        setTimeout(() => {
+          $(".pop-up").removeClass("active");
+          $(".submit-notice").empty();
+        }, 3000)
+      )
+      .then(
+        /// set current order to submitted order list
+        Cookies.set(
+          "submitted_order",
+          JSON.stringify([
+            ...JSON.parse(Cookies.get("submitted_order")),
+            JSON.parse(Cookies.get("order_id")),
+          ])
+        )
+      )
+      .then(Cookies.remove("order_id")) ///remove current order
+      .then(initializeOrderStatus())
+      .then(initializeOrder()) ///set up a new order
+      .then(getandRenderCartItemswithPrice()) ///regenerate a new cart;
       .catch((err) => console.log(err));
   } else {
     $(".phone-error").empty();
-    $(".phone-error").append("phone number must be a 10 digits number");
+    $(".phone-error").append("phone number must be a 10 digits number or cart must not be empty!");
   }
-};
-
-// order -status
-
-const renderOrderItem = (cartItem) => {
-  const { name, price, quantity } = cartItem;
-
-  let $ItemText = `
-  <div id= "${name}">
-    <div>${name}</div>
-    <div>$${price}</div>
-    <div>${quantity}</div>
-  </div>
-  `;
-  return $ItemText;
-};
-
-const renderOrderItemList = (cartItems) => {
-  let itemList = "";
-  for (item of cartItems) {
-    itemList += renderOrderItem(item);
-  }
-  return itemList;
-};
-
-export const renderOrder = (orderObject) => {
-  const { name, email, phone, cartItems, estimated_completion, completed } =
-    orderObject;
-
-  const $orderText = `
-  <div>
-    <h5>${name} 's Order</h5>
-    <div>  
-      <span>Estimated Completion in: ${estimated_completion}</span>
-      <span class="complete" style="color:${
-        completed ? "green" : "lightgrey"
-      }">${completed ? "completed" : "incomplete"}</span>
-   </div>
-   <div class="items">
-   ${renderOrderItemList(cartItems)}
-   </div>
-  </div>`;
-  return $orderText;
 };
