@@ -5,6 +5,7 @@ CREATE TABLE orders (
   phone VARCHAR(255) DEFAULT NULL,
   order_notes VARCHAR(255) DEFAULT NULL,
   submitted BOOLEAN DEFAULT false,
+  completed BOOLEAN DEFAULT false,
   completion_time VARCHAR(255) DEFAULT NULL,
 
   UNIQUE(id)
