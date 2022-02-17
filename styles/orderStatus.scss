@@ -3,15 +3,19 @@
   width: 100%;
   height: 100%;
   padding: 2rem;
-  overflow-y:auto;
+  overflow-y: auto;
 
   h3 {
     margin-bottom: 5%;
   }
 
   .order-content {
-    border: 1px solid lightgray;
-    padding: 1rem;
+    > * {
+      margin-bottom: 3%;
+      padding: 1rem;
+      border: 1px solid lightgray;
+    }
+
     .cart-item {
       display: flex;
 

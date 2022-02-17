@@ -6,7 +6,7 @@ export const initializeOrder = () => {
   if (!order_id) {
     $.post("/api/order/")
       .then((result) => {
-        console.log(result);
+        console.log(result.id);
         Cookies.set("order_id", JSON.stringify(result.id));
       })
       .catch((err) => console.log(err));
@@ -249,10 +249,14 @@ export const renderOrder = (orderObject) => {
   <div class>
     <h5>${name} 's Order</h5>
     <div>  
-      <span>Estimated Completed in: ${estimated_completion?estimated_completion:"wating for restaurant response..."}</span>
-      <div class="complete" style="color:${
-        completed ? "green" : "red"
-      }">${completed ? "completed" : "incomplete"}</div>
+      <span>Estimated Completed in: ${
+        estimated_completion
+          ? estimated_completion
+          : "wating for restaurant response..."
+      }</span>
+      <div class="complete" style="color:${completed ? "green" : "red"}">${
+    completed ? "completed" : "incomplete"
+  }</div>
    </div>
    <div class="items">
    ${renderOrderItemList(cartItems)}
@@ -280,16 +284,17 @@ export const initializeOrderStatus = () => {
     Cookies.set("submitted_order", JSON.stringify([]));
     submittedOrderList = [];
   }
-  
 
   Promise.all(
     submittedOrderList.map((orderId) => $.get(`/api/order/${orderId}`))
   )
     .then((resultList) => {
-      $(".order-content").empty()
-      resultList.forEach((result) =>
-        $(".order-content").append(renderOrder(result))
-      );
+      $(".order-content").empty();
+      resultList.forEach((result) => {
+        if (result.submitted) {
+          $(".order-content").append(renderOrder(result));
+        }
+      });
     })
     .then(console.log("orderstatus initialized"))
     .catch((err) => console.log(err));
@@ -311,13 +316,12 @@ export const submitForm = () => {
 
   // phone number must be 10 digit number
   var regex = /^[0-9]+$/;
-  
 
   if (obj.phone.length === 10 && obj.phone.match(regex)) {
     obj.phone = "+" + obj.phone;
     // form-submission after adding order_id;
 
-    $.post("api/order/submit",obj)
+    $.post("api/order/submit", obj)
       .then($(".phone-error").empty())
       .then($(".pop-up").removeClass("active"))
       .then(
@@ -333,6 +337,7 @@ export const submitForm = () => {
       .then(Cookies.remove("order_id")) ///remove current order
       .then(initializeOrderStatus())
       .then(initializeOrder()) ///set up a new order
+      .then(getandRenderCartItemswithPrice())///regenerate a new cart;
       .catch((err) => console.log(err));
   } else {
     $(".phone-error").empty();
