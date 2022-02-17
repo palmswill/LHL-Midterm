@@ -9,9 +9,8 @@ section.shop {
   > .shop-item {
     flex-direction: column;
     background-color: white;
-    min-height: 250px;
+    min-height: 400px;
     flex-grow: 1;
-    overflow-y: auto;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
     img{
@@ -27,6 +26,7 @@ section.shop {
       margin: auto auto 5%;;
       display: flex;
       width:90%;
+      
 
 
       .price {

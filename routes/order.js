@@ -132,7 +132,7 @@ module.exports = (db) => {
       WHERE id = $1;
       `, [req.body.order_id, req.body.name, req.body.phone, req.body.order_notes])
       .then(() => {
-        sendToRestaurant(db, req.body.order_id, req.body.order_notes);
+        // sendToRestaurant(db, req.body.order_id, req.body.order_notes);
         return res.send('sent to restaurant');
       })
       .catch(err => res.status(500).send(err.message));
