@@ -7,8 +7,11 @@ import {
 import { initalizeForm } from "../methods/submitForm.js";
 import { initalizeCart } from "../methods/cart.js";
 import { initalizeShop } from "../methods/shop.js";
+import {initializeStatus} from "../methods/orderStatus.js";
 
 $(() => {
+  // initialize order status;
+  initializeStatus();
   //initialize order Id if not in cookie
 
   initializeOrder();

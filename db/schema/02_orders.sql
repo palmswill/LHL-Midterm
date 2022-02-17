@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS orders CASCADE;
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) DEFAULT NULL,
+  phone VARCHAR(255) DEFAULT NULL,
+  order_notes VARCHAR(255) DEFAULT NULL,
+  submitted BOOLEAN DEFAULT false,
+  completed BOOLEAN DEFAULT false,
+  completion_time VARCHAR(255) DEFAULT NULL,
+
+  UNIQUE(id)
+);

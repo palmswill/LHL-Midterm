@@ -1,26 +1,17 @@
-import { getandRenderShopItems,getandRenderCartItemswithPrice } from "./methods.js";
+import {
+  getandRenderShopItems,
+  getandRenderCartItemswithPrice,
+} from "./methods.js";
 
-export const initalizeShop=()=>{
-  $(()=>{
+export const initalizeShop = () => {
+  $(() => {
+    getandRenderShopItems();
 
-  getandRenderShopItems();
-
-  
-  $(document).on("click",".add-shop-item",function(event){
-    console.log(event.target)
-    console.log("adding shop item id:",event.target.id);
-    getandRenderCartItemswithPrice();
-
-  })
-
-
-
-
-
-
-
-
-  })
-
-
-}
+    $(document).on("click", ".add-shop-item", function (event) {
+      console.log("adding shop item id:", event.target.id);
+      $.get(`/api/order/${Cookies.get("order_id")}/ShopItem/${event.target.id}`)
+        .then(getandRenderCartItemswithPrice())
+        .catch((err) => console.log(err));
+    });
+  });
+};

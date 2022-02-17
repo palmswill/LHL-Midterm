@@ -2,10 +2,14 @@
 
 export const initializeOrder = () => {
   let order_id = Cookies.get("order_id");
-
-  // if no order id in cookes, set the order_id
+  // if order_id is not defined in cookie, get an order_id;
   if (!order_id) {
-    $.get("").then(() => Cookies.set("order_id", 1));
+    $.post("/api/order/")
+      .then((result) => {
+        console.log(result);
+        Cookies.set("order_id", JSON.stringify(result.id));
+      })
+      .catch((err) => console.log(err));
   }
   console.log("order_id:", Cookies.get("order_id"));
 };
@@ -53,11 +57,11 @@ export const shopList = [
 ];
 
 const generateShopItemLayout = (shopItem) => {
-  const { id, name, pricePerRoll, imageUrl, content } = shopItem;
+  const { id, name, price, imageurl, content } = shopItem;
 
   let $shopItem = `<div class="shop-item flex">
   <img
-    src=${imageUrl}
+    src=${imageurl}
     alt=""
   />
   <div class="content">
@@ -66,7 +70,7 @@ const generateShopItemLayout = (shopItem) => {
   </div>
   <button id=${id} class="add-shop-item">
     <span id=${id}>Add</span>
-    <span id=${id} class="price">$${pricePerRoll}</span>
+    <span id=${id} class="price">$${price}</span>
   </button>
 </div>
   `;
@@ -85,10 +89,10 @@ export const renderShopItems = (shopList) => {
 
 // get and render shop items
 export const getandRenderShopItems = () => {
-  $.get("/")
-    .then(() => {
+  $.get("/api/shopItem")
+    .then((results) => {
       $(".shop").empty();
-      const shopItems = renderShopItems(shopList);
+      const shopItems = renderShopItems(results);
 
       $(".shop").append(shopItems);
 
@@ -134,7 +138,12 @@ const generateCartItem = (cartItem) => {
       <div>${name}</div>
       <div> x ${quantity}
       <i id=${id} class="fa-solid fa-plus increment"></i>
-      <i id=${id} class="fa-solid fa-minus decrement"></i>
+      ${
+        quantity === 1
+          ? ""
+          : `<i id=${id} class="fa-solid fa-minus decrement"></i>
+      `
+      }
       </div>
     </div>
     <div class="price-tag">$${price}</div>
@@ -163,9 +172,11 @@ const renderCartTotal = (cartList) => {
     subTotal += price * quantity;
   });
 
+  subTotal = Math.round(subTotal * 100) / 100;
+
   let tax = Math.round(0.13 * subTotal * 100) / 100;
 
-  let totalPrice = Math.round(subTotal + tax * 100) / 100;
+  let totalPrice = Math.round((subTotal + tax) * 100) / 100;
 
   const $PriceText = `
   <div class="flex bold">
@@ -186,12 +197,15 @@ const renderCartTotal = (cartList) => {
 };
 
 export const fetchCartItem = () => {
-  const cartItem = renderCartItems(cartList);
-
-  $(".basket").empty();
-  $(".basket").append(cartItem);
-  $(".price-display").empty();
-  $(".price-display").append(renderCartTotal(cartList));
+  $.get(`/api/order/${Cookies.get("order_id")}/cartItem`)
+    .then((cartList) => {
+      console.log(cartList);
+      $(".basket").empty();
+      $(".basket").append(renderCartItems(cartList));
+      $(".price-display").empty();
+      $(".price-display").append(renderCartTotal(cartList));
+    })
+    .catch((err) => console.log(err));
 };
 
 export const getandRenderCartItemswithPrice = () => {
@@ -217,8 +231,63 @@ export const submitForm = () => {
 
     obj[name] = value;
   }
-  // form-submission after adding order_id;
-  $.get("/")
-    .then(console.log(obj))
-    .catch((err) => console.log(err));
+
+  // phone number must be 10 digit number
+  var regex = /^[0-9]+$/;
+
+  if (obj.phone.length === 10 && obj.phone.match(regex)) {
+    obj.phone = "+" + obj.phone;
+    // form-submission after adding order_id;
+    $.post("/api/order/submit", obj)
+      .then((result) => console.log(result))
+      .then($(".phone-error").empty())
+      .then($(".pop-up").removeClass("active"))
+      .catch((err) => console.log(err));
+  } else {
+    $(".phone-error").empty();
+    $(".phone-error").append("phone number must be a 10 digits number");
+  }
+};
+
+// order -status
+
+const renderOrderItem = (cartItem) => {
+  const { name, price, quantity } = cartItem;
+
+  let $ItemText = `
+  <div id= "${name}">
+    <div>${name}</div>
+    <div>$${price}</div>
+    <div>${quantity}</div>
+  </div>
+  `;
+  return $ItemText;
+};
+
+const renderOrderItemList = (cartItems) => {
+  let itemList = "";
+  for (item of cartItems) {
+    itemList += renderOrderItem(item);
+  }
+  return itemList;
+};
+
+export const renderOrder = (orderObject) => {
+  const { name, email, phone, cartItems, estimated_completion, completed } =
+    orderObject;
+
+  const $orderText = `
+  <div>
+    <h5>${name} 's Order</h5>
+    <div>  
+      <span>Estimated Completion in: ${estimated_completion}</span>
+      <span class="complete" style="color:${
+        completed ? "green" : "lightgrey"
+      }">${completed ? "completed" : "incomplete"}</span>
+   </div>
+   <div class="items">
+   ${renderOrderItemList(cartItems)}
+   </div>
+  </div>`;
+  return $orderText;
 };
