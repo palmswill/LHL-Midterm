@@ -218,37 +218,6 @@ export const getandRenderCartItemswithPrice = () => {
     .catch((err) => console.log(err));
 };
 
-// form submission
-
-export const submitForm = () => {
-  const obj = {};
-
-  const formArray = $(".submit-form").serializeArray();
-  const order_id = Cookies.get("order_id");
-  obj.order_id = order_id;
-  for (let input of formArray) {
-    const { name, value } = input;
-
-    obj[name] = value;
-  }
-
-  // phone number must be 10 digit number
-  var regex = /^[0-9]+$/;
-
-  if (obj.phone.length === 10 && obj.phone.match(regex)) {
-    obj.phone = "+" + obj.phone;
-    // form-submission after adding order_id;
-    $.post("/api/order/submit", obj)
-      .then((result) => console.log(result))
-      .then($(".phone-error").empty())
-      .then($(".pop-up").removeClass("active"))
-      .catch((err) => console.log(err));
-  } else {
-    $(".phone-error").empty();
-    $(".phone-error").append("phone number must be a 10 digits number");
-  }
-};
-
 // order -status
 
 const renderOrderItem = (cartItem) => {
@@ -266,7 +235,7 @@ const renderOrderItem = (cartItem) => {
 
 const renderOrderItemList = (cartItems) => {
   let itemList = "";
-  for (item of cartItems) {
+  for (const item of cartItems) {
     itemList += renderOrderItem(item);
   }
   return itemList;
@@ -290,4 +259,83 @@ export const renderOrder = (orderObject) => {
    </div>
   </div>`;
   return $orderText;
+};
+
+export const renderOrderList = () => {
+  const orderList = JSON.parse(Cookies.get("submitted_order"));
+  if (orderList && orderList.length) {
+    for (const orderId of orderList) {
+      $.get(`/api/order/${orderId}`)
+        .then((result) => renderOrder(result))
+        .then((renderResult) => $(".order-content").append(renderResult));
+    }
+  }
+};
+
+export const initializeOrderStatus = () => {
+  const submittedOrderList = Cookies.get("submitted_order")
+    ? JSON.parse(Cookies.get("submitted_order"))
+    : undefined;
+  if (!submittedOrderList) {
+    Cookies.set("submitted_order", JSON.stringify([]));
+    submittedOrderList = [];
+  }
+  
+
+  Promise.all(
+    submittedOrderList.map((orderId) => $.get(`/api/order/${orderId}`))
+  )
+    .then((resultList) => {
+      $(".order-content").empty()
+      resultList.forEach((result) =>
+        $(".order-content").append(renderOrder(result))
+      );
+    })
+    .then(console.log("orderstatus initialized"))
+    .catch((err) => console.log(err));
+};
+
+// form submission
+
+export const submitForm = () => {
+  const obj = {};
+
+  const formArray = $(".submit-form").serializeArray();
+  const order_id = Cookies.get("order_id");
+  obj.order_id = order_id;
+  for (let input of formArray) {
+    const { name, value } = input;
+
+    obj[name] = value;
+  }
+
+  // phone number must be 10 digit number
+  var regex = /^[0-9]+$/;
+  
+  
+  if (obj.phone.length === 10 && obj.phone.match(regex)) {
+    obj.phone = "+" + obj.phone;
+    // form-submission after adding order_id;
+
+    $.get("/")
+      .then($(".phone-error").empty())
+      .then($(".pop-up").removeClass("active"))
+      .then(
+        /// set current order to submitted order list
+        Cookies.set(
+          "submitted_order",
+          JSON.stringify([
+            ...JSON.parse(Cookies.get("submitted_order")),
+            JSON.parse(Cookies.get("order_id")),
+          ])
+        )
+      )
+      .then(Cookies.remove("order_id")) ///remove current order
+      .then(initializeOrderStatus())
+      .then(initializeOrder()) ///set up a new order
+      .catch((err) => console.log(err));
+  } else {
+    $(".phone-error").empty();
+    $(".phone-error").append("phone number must be a 10 digits number");
+  }
 };
