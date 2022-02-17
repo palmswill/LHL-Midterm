@@ -1,10 +1,9 @@
 const express = require('express');
-
 const { sendToRestaurant } = require('../helpers/sendSms.js');
-
 const router  = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
+
 
 module.exports = (db) => {
   // GET request - /order/:id/cartItem
@@ -20,6 +19,7 @@ module.exports = (db) => {
       .then(data => res.send(data.rows))
       .catch(err => res.status(500).send(err.message));
   });
+
 
   // GET request - /order/:id
   // get order status by order id with cart item information
