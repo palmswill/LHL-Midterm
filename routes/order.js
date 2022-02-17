@@ -60,11 +60,7 @@ module.exports = (db) => {
         }
         })
 
-        .catch(err => {
-          console.log(err)
-          res
-            .status(500)
-            .send(err.message);
+        .catch(err => res.status(500).send(err.message));
       });
   })
 
