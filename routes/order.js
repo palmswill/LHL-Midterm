@@ -58,11 +58,10 @@ module.exports = (db) => {
           }
           res.send(order);
         }
-        })
+      })
+      .catch(err => res.status(500).send(err.message));
+  });
 
-        .catch(err => res.status(500).send(err.message));
-      });
-  })
 
 
   // GET request-/order/:id/shopItem/:id
