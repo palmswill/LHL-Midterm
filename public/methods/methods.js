@@ -199,15 +199,15 @@ const renderCartTotal = (cartList) => {
 
 export const fetchCartItem = () => {
   if (Cookies.get("order_id")) {
-    $.get(`/api/order/${Cookies.get("order_id")}/cartItem`)
-      .then((cartList) => {
-        console.log(cartList);
-        $(".basket").empty();
-        $(".basket").append(renderCartItems(cartList));
-        $(".price-display").empty();
-        $(".price-display").append(renderCartTotal(cartList));
-      })
-      .catch((err) => console.log(err));
+      $.get(`/api/order/${Cookies.get("order_id")}/cartItem`)
+        .then((cartList) => {
+          console.log(cartList);
+          $(".basket").empty();
+          $(".basket").append(renderCartItems(cartList));
+          $(".price-display").empty();
+          $(".price-display").append(renderCartTotal(cartList));
+        })
+        .catch((err) => console.log(err));
   }
 };
 
@@ -299,8 +299,8 @@ export const initializeOrderStatus = () => {
           $(".order-content").append(renderOrder(result));
         }
       });
+      console.log("orderStatus initialized:", resultList);
     })
-    .then(console.log("orderstatus initialized"))
     .catch((err) => console.log(err));
 };
 
@@ -335,7 +335,7 @@ export const submitForm = () => {
         setTimeout(() => {
           $(".pop-up").removeClass("active");
           $(".submit-notice").empty();
-        }, 3000)
+        }, 1000)
       )
       .then(
         /// set current order to submitted order list
@@ -347,9 +347,9 @@ export const submitForm = () => {
           ])
         )
       )
-      .then(initializeOrderStatus())
-      .then(Cookies.remove("order_id")) ///remove current order
-      .then(initializeOrder()) ///set up a new order
+      .then(()=>{return initializeOrderStatus()})
+      .then(()=>{return Cookies.remove("order_id")}) ///remove current order
+      .then(()=>{return initializeOrder()}) ///set up a new order
       .then($(".basket").empty()) ///empty basket
       .catch((err) => console.log(err));
   } else {

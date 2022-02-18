@@ -10,7 +10,7 @@ export const initalizeShop = () => {
     $(document).on("click", ".add-shop-item", function (event) {
       console.log("adding shop item id:", event.target.id);
       $.get(`/api/order/${Cookies.get("order_id")}/ShopItem/${event.target.id}`)
-        .then(getandRenderCartItemswithPrice())
+        .then(()=>{return getandRenderCartItemswithPrice()})
         .catch((err) => console.log(err));
     });
   });
