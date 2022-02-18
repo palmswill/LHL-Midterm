@@ -316,8 +316,7 @@ export const submitForm = () => {
 
   // phone number must be 10 digit number
   var regex = /^[0-9]+$/;
-
-  if (obj.phone.length === 10 && obj.phone.match(regex) && $(".basket").is(':empty')) {
+  if (obj.phone.length === 10 && obj.phone.match(regex) && !$(".basket").is(':empty')) {
     obj.phone = "+" + obj.phone;
     // form-submission after adding order_id;
 
