@@ -12,8 +12,8 @@ export const initalizeCart = () => {
           event.target.id
         }/increment`
       )
-        .then(getandRenderCartItemswithPrice())
-        .catch((err) => console.log(err));
+      .then(()=>{return getandRenderCartItemswithPrice()})
+      .catch((err) => console.log(err));
     });
     $(document).on("click", ".decrement", function (event) {
       console.log(Cookies.get("order_id"), event.target.id, "decremented");
@@ -22,8 +22,8 @@ export const initalizeCart = () => {
           event.target.id
         }/decrement`
       )
-        .then(getandRenderCartItemswithPrice())
-        .catch((err) => console.log(err));
+      .then(()=>{return getandRenderCartItemswithPrice()})
+      .catch((err) => console.log(err));
     });
 
     $(document).on("click", ".cancel-item", function (event) {
@@ -33,7 +33,7 @@ export const initalizeCart = () => {
           event.target.id
         }/delete`
       )
-        .then(getandRenderCartItemswithPrice())
+        .then(()=>{return getandRenderCartItemswithPrice()})
         .catch((err) => console.log(err));
     });
   });
