@@ -325,7 +325,7 @@ export const submitForm = () => {
     obj.phone.match(regex) &&
     !$(".basket").is(":empty")
   ) {
-    obj.phone = "+" + obj.phone;
+    obj.phone = "+1" + obj.phone;
     // form-submission after adding order_id;
 
     $.post("api/order/submit", obj)
