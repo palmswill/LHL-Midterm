@@ -350,7 +350,8 @@ export const submitForm = () => {
       .then(()=>{return initializeOrderStatus()})
       .then(()=>{return Cookies.remove("order_id")}) ///remove current order
       .then(()=>{return initializeOrder()}) ///set up a new order
-      .then($(".basket").empty()) ///empty basket
+      .then(()=>{return getandRenderCartItemswithPrice()} ) ///empty basket
+      .then()
       .catch((err) => console.log(err));
   } else {
     $(".phone-error").empty();
