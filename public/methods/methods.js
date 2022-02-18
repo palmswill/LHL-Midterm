@@ -245,7 +245,7 @@ const renderOrderItemList = (cartItems) => {
 };
 
 export const renderOrder = (orderObject) => {
-  const { name, email, phone, cartItems, estimated_completion, completed } =
+  const { name, email, phone, cartItems, completion_time, completed } =
     orderObject;
 
   const $orderText = `
@@ -253,8 +253,8 @@ export const renderOrder = (orderObject) => {
     <h5>${name} 's Order</h5>
     <div>  
       <span>Estimated Completed in: ${
-        estimated_completion
-          ? estimated_completion
+        completion_time
+          ? completion_time
           : "wating for restaurant response..."
       }</span>
       <div class="complete" style="color:${completed ? "green" : "red"}">${
@@ -325,7 +325,7 @@ export const submitForm = () => {
     obj.phone.match(regex) &&
     !$(".basket").is(":empty")
   ) {
-    obj.phone = "+" + obj.phone;
+    obj.phone = "+1" + obj.phone;
     // form-submission after adding order_id;
 
     $.post("api/order/submit", obj)
