@@ -10,8 +10,9 @@ export const initializeOrder = () => {
         Cookies.set("order_id", JSON.stringify(result.id));
       })
       .catch((err) => console.log(err));
+  } else {
+    console.log("order_id:", order_id);
   }
-  console.log("order_id:", Cookies.get("order_id"));
 };
 
 //remove order_id
@@ -197,15 +198,17 @@ const renderCartTotal = (cartList) => {
 };
 
 export const fetchCartItem = () => {
-  $.get(`/api/order/${Cookies.get("order_id")}/cartItem`)
-    .then((cartList) => {
-      console.log(cartList);
-      $(".basket").empty();
-      $(".basket").append(renderCartItems(cartList));
-      $(".price-display").empty();
-      $(".price-display").append(renderCartTotal(cartList));
-    })
-    .catch((err) => console.log(err));
+  if (Cookies.get("order_id")) {
+      $.get(`/api/order/${Cookies.get("order_id")}/cartItem`)
+        .then((cartList) => {
+          console.log(cartList);
+          $(".basket").empty();
+          $(".basket").append(renderCartItems(cartList));
+          $(".price-display").empty();
+          $(".price-display").append(renderCartTotal(cartList));
+        })
+        .catch((err) => console.log(err));
+  }
 };
 
 export const getandRenderCartItemswithPrice = () => {
@@ -292,11 +295,12 @@ export const initializeOrderStatus = () => {
       $(".order-content").empty();
       resultList.forEach((result) => {
         if (result.submitted) {
+          console.log(result);
           $(".order-content").append(renderOrder(result));
         }
       });
+      console.log("orderStatus initialized:", resultList);
     })
-    .then(console.log("orderstatus initialized"))
     .catch((err) => console.log(err));
 };
 
@@ -316,8 +320,11 @@ export const submitForm = () => {
 
   // phone number must be 10 digit number
   var regex = /^[0-9]+$/;
-
-  if (obj.phone.length === 10 && obj.phone.match(regex) && $(".basket").is(':empty')) {
+  if (
+    obj.phone.length === 10 &&
+    obj.phone.match(regex) &&
+    !$(".basket").is(":empty")
+  ) {
     obj.phone = "+" + obj.phone;
     // form-submission after adding order_id;
 
@@ -328,7 +335,7 @@ export const submitForm = () => {
         setTimeout(() => {
           $(".pop-up").removeClass("active");
           $(".submit-notice").empty();
-        }, 3000)
+        }, 1000)
       )
       .then(
         /// set current order to submitted order list
@@ -340,13 +347,16 @@ export const submitForm = () => {
           ])
         )
       )
-      .then(Cookies.remove("order_id")) ///remove current order
-      .then(initializeOrderStatus())
-      .then(initializeOrder()) ///set up a new order
-      .then(getandRenderCartItemswithPrice()) ///regenerate a new cart;
+      .then(()=>{return initializeOrderStatus()})
+      .then(()=>{return Cookies.remove("order_id")}) ///remove current order
+      .then(()=>{return initializeOrder()}) ///set up a new order
+      .then(()=>{return getandRenderCartItemswithPrice()} ) ///empty basket
+      .then()
       .catch((err) => console.log(err));
   } else {
     $(".phone-error").empty();
-    $(".phone-error").append("phone number must be a 10 digits number or cart must not be empty!");
+    $(".phone-error").append(
+      "phone number must be a 10 digits number or cart must not be empty!"
+    );
   }
 };
